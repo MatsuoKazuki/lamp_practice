@@ -17,10 +17,10 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
   ";
-
-  return fetch_query($db, $sql);
+  $item_id_array=array(':item_id' => $item_id);
+  return fetch_query($db, $sql, $item_id_array);
 }
 // SQL文を作成
 function get_items($db, $is_open = false){
@@ -71,7 +71,7 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   return false;
   
 }
-//ユーザー登録
+//商品情報登録
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
   $sql = "
@@ -83,10 +83,10 @@ function insert_item($db, $name, $price, $stock, $filename, $status){
         image,
         status
       )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
+    VALUES(:name, :price, :stock, :filename, :status_value);
   ";
-
-  return execute_query($db, $sql);
+$insert_item_array=array(':name'=>$name, ':price'=>$price, ':stock'=>$stock, ':filename'=>$filename, ':status_value'=>$status_value);
+  return execute_query($db, $sql, $insert_item_array);
 }
 //ステータスの更新
 function update_item_status($db, $item_id, $status){
@@ -96,11 +96,11 @@ function update_item_status($db, $item_id, $status){
     SET
       status = {$status}
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql);
+  $item_id_array=array(':item_id' => $item_id);
+  return execute_query($db, $sql, $item_id_array);
 }
 //在庫数の更新
 function update_item_stock($db, $item_id, $stock){
@@ -110,11 +110,11 @@ function update_item_stock($db, $item_id, $stock){
     SET
       stock = {$stock}
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql);
+  $item_id_array=array(':item_id' => $item_id);
+  return execute_query($db, $sql, $item_id_array);
 }
 //
 function destroy_item($db, $item_id){
@@ -137,11 +137,11 @@ function delete_item($db, $item_id){
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = :item_id
     LIMIT 1
   ";
-  
-  return execute_query($db, $sql);
+  $item_id_array=array(':item_id' => $item_id);
+  return execute_query($db, $sql, $item_id_array);
 }
 
 
