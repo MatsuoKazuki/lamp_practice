@@ -15,6 +15,15 @@ $password = get_post('password');
 //DB接続
 $db = get_db_connect();
 
+//パラメーター取得
+$token = get_post('token');
+//リダイレクト
+if(is_valid_csrf_token($token) === false){
+  redirect_to(LOGIN_URL);
+}
+//トークンの破棄
+unset($_SESSION["csrf_token"]);
+
 //ログインチェック
 $user = login_as($db, $name, $password);
 if( $user === false){

@@ -16,6 +16,16 @@ $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');
 //DB接続
 $db = get_db_connect();
+
+//パラメーター取得
+$token = get_post('token');
+//リダイレクト
+if(is_valid_csrf_token($token) === false){
+  redirect_to(LOGIN_URL);
+}
+//トークンの破棄
+unset($_SESSION["csrf_token"]);
+
 //ユーザー登録処理
 try{
   $result = regist_user($db, $name, $password, $password_confirmation);

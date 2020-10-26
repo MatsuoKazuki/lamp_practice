@@ -15,6 +15,15 @@ $db = get_db_connect();
 //ログインユーザーの取得
 $user = get_login_user($db);
 
+//パラメーター取得
+$token = get_post('token');
+//リダイレクト
+if(is_valid_csrf_token($token) === false){
+  redirect_to(LOGIN_URL);
+}
+//トークンの破棄
+unset($_SESSION["csrf_token"]);
+
 //item_idの取得
 $item_id = get_post('item_id');
 //カートに商品追加
