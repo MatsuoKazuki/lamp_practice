@@ -4,6 +4,7 @@ require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'user.php';
 require_once MODEL_PATH . 'item.php';
 require_once MODEL_PATH . 'cart.php';
+require_once MODEL_PATH . 'histories.php';
 //セッション開始
 session_start();
 //
@@ -34,5 +35,13 @@ if(purchase_carts($db, $carts) === false){
 } 
 //合計値
 $total_price = sum_carts($carts);
+
+//購入履歴テーブルにuser_idと合計額を追加 ($db $user['user_id'] $total_price $carts[]) 関数名：regist_history_transaction
+//購入明細テーブルに注文番号・itemID・購入時価格・購入数量を追加  
+
+if(regist_history_transaction($db, $carts,$user['user_id'] ,$total_price) === false){
+  set_error('購入履歴テーブルに追加できませんでした。');
+  redirect_to(CART_URL);
+}
 
 include_once '../view/finish_view.php';
