@@ -63,39 +63,76 @@ function regist_history_transaction($db, $carts, $user_id, $total_price){
         
  
 }
+//全ての購入履歴
+function get_admin_history($db){
+    $sql = "
+        SELECT
+            order_id,
+            purchase_date,
+            sum_price
+        FROM
+            purchase_history
+        WHERE
+            user_id = 1
+        ORDER BY
+            purchase_date DESC
+        ";
+        return fetch_all_query($db, $sql);
+}
 
 // ユーザ毎の購入履歴
-/*
+
 function get_history($db, $user_id){
     $sql = "
       SELECT
-        purchase_histories.order_id,
-        purchase_histories.purchase_date,
-        purchase_history.sum_price
+        order_id,
+        purchase_date,
+        sum_price
       FROM
         purchase_history
-      JOIN
-        purchase_details
-      ON
-        purchase_history.order_id = purchase_details.order_id
       WHERE
-        purchase_history.user_id = :user_id
+        user_id = :user_id
+      ORDER BY
+        purchase_date DESC
     ";
     $array=array(':user_id' => $user_id);
     return fetch_all_query($db, $sql, $array);
 }
 
+
 // ユーザ毎の購入明細
-/*
 function get_detail($db, $order_id){
     $sql = "
       SELECT
-        purchase_details.price,
-        purchase_details.amount,
-        purchase_details.created,
-        purchase_details.item_id,
-        SUM(purchase_details.price * purchase_details.amount) AS subtotal
+      purchase_details.price,
+      purchase_details.amount,
+      purchase_details.price * purchase_details.amount AS subtotal,
+        items.name
+    FROM
+        purchase_details
+    JOIN
+        items
+    ON
+        purchase_details.item_id = items.item_id
+    WHERE
+        purchase_details.order_id = :order_id
     ";
-    return fetch_all_query($db, $sql, );
+    $array = array(':order_id' => $order_id);
+    return fetch_all_query($db, $sql, $array);
 }
-*/
+
+//ユーザーが指定した履歴
+function get_history_by_order_id($db, $order_id){
+    $sql = "
+    SELECT
+      order_id,
+      purchase_date,
+      sum_price
+    FROM
+      purchase_history
+    WHERE
+      order_id = :order_id
+  ";
+  $array=array('order_id' => $order_id);
+  return fetch_query($db, $sql, $array);
+}
