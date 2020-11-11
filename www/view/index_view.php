@@ -17,7 +17,14 @@
   <div class="container">
     <h1>商品一覧</h1>
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
-
+    <form method = "post">
+      <select name="sort">
+        <option value="new">新着順</option>
+        <option value="cheap" <?php if($sort === "cheap"){ print "selected";} ?>>価格が安い順</option>
+        <option value="high" <?php if($sort === "high"){ print "selected";} ?> >価格が高い順</option>
+      </select>
+      <input type="submit" value="並び替え">
+    </form>
     <div class="card-deck">
       <div class="row">
       <?php foreach($items as $item){ ?>
