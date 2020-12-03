@@ -51,6 +51,12 @@
           </div>
         </div>
       <?php } ?>
+
+          <?php
+            for($i=0; $i < $pages; $i++) {?>
+                <a href='?page=<?php print($i+1); ?>&sort=<?php print($sort); ?>'><?php print($i+1); ?></a>
+          <?php } ?>
+      
       </div>
     </div>
   </div>
