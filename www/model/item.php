@@ -22,6 +22,7 @@ function get_item($db, $item_id){
   $item_id_array=array(':item_id' => $item_id);
   return fetch_query($db, $sql, $item_id_array);
 }
+
 // SQL文を作成
 function get_items($db, $is_open = false){
   $sql = '
@@ -43,7 +44,7 @@ function get_items($db, $is_open = false){
 
   return fetch_all_query($db, $sql);
 }
-function get_items_new_arrival($db){
+function get_items_new_arrival($db, $offset){
   $sql = '
     SELECT
       item_id, 
@@ -59,13 +60,57 @@ function get_items_new_arrival($db){
       status = 1
     ORDER BY
       created desc
+    LIMIT
+      8
+    OFFSET
+      :offset
     ';
-  
-  return fetch_all_query($db, $sql);
+    $offset_array=array(':offset' => $offset);
+  return fetch_all_query($db, $sql, $offset_array);
 }
 
+//総件数取得
+function get_all_item($db){
+  $sql = '
+  SELECT 
+    COUNT(*) 
+      FROM 
+        items 
+      WHERE
+        status = 1
+  ';
+
+  return fetch_query($db, $sql);
+}
+
+//
+function get_pagenation($db,$offset){
+  $sql = '
+  SELECT
+    item_id, 
+    name,
+    stock,
+    price,
+    image,
+    status
+    FROM
+      items
+    WHERE
+      status = 1
+    LIMIT
+      8
+    OFFSET
+      :offset'
+      ;
+      $offset_array=array(':offset' => $offset);
+
+      return fetch_all_query($db, $sql, $offset_array);
+}
+
+
+
 //価格の安い順の商品一覧データ
-function get_items_cheap_price($db){
+function get_items_cheap_price($db, $offset){
   $sql = '
   SELECT
     item_id, 
@@ -80,12 +125,18 @@ function get_items_cheap_price($db){
     status = 1
   ORDER BY
     price asc
+  LIMIT
+    8
+  OFFSET
+    :offset
   ';
-  return fetch_all_query($db, $sql);
+
+  $offset_array=array(':offset' => $offset);
+  return fetch_all_query($db, $sql, $offset_array);
 }
 
 //価格の高い順の商品一覧データ
-function get_items_high_price($db){
+function get_items_high_price($db,$offset){
   $sql = '
   SELECT
     item_id, 
@@ -100,8 +151,13 @@ function get_items_high_price($db){
     status = 1
   ORDER BY
     price desc
+  LIMIT
+    8
+  OFFSET
+    :offset
 ';
-return fetch_all_query($db, $sql);
+$offset_array=array(':offset' => $offset);
+return fetch_all_query($db, $sql, $offset_array);
 }
 
 function get_all_items($db){
