@@ -22,6 +22,7 @@ function get_item($db, $item_id){
   $item_id_array=array(':item_id' => $item_id);
   return fetch_query($db, $sql, $item_id_array);
 }
+
 // SQL文を作成
 function get_items($db, $is_open = false){
   $sql = '
